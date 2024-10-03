@@ -4,6 +4,7 @@ import { useAppContext } from './AppContext';
 import AdminDashboard from './components/AdminDashboard';
 import Footer from './components/Footer';
 import HomePage from './components/Home';
+import LiveSession from './components/LiveSession';
 import Login from './components/Login';
 import ManageRegistrations from './components/ManageRegistrations';
 import MyWebinars from './components/MyWebinars';
@@ -36,6 +37,7 @@ function App() {
             <Route path="/admin/schedule" element={<ScheduleWebinar />} />
             <Route path="/admin/registrations" element={<ManageRegistrations />} />
             <Route path="/admin/resources" element={<UploadResources />} />
+            <Route path="/admin/live-session/:id" element={<LiveSession />} />
           </Routes>
         </main>
         <Footer />
