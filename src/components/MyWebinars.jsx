@@ -3,13 +3,20 @@ import { useAppContext } from '../AppContext';
 import WebinarCard from './WebinarCard';
 
 const MyWebinars = () => {
-  const { currentUser, webinars } = useAppContext();
-
+  const { currentUser, webinars, getRegisteredEvents } = useAppContext();
+  
+  console.log('Current user:', currentUser);
+  console.log('All webinars:', webinars);
+  
   if (!currentUser) {
     return <div>Please log in to view your webinars</div>;
   }
-
-  const userWebinars = webinars.filter(webinar => webinar.attendees && webinar.attendees.includes(currentUser.id));
+  
+  const registeredEvents = getRegisteredEvents();
+  console.log('Registered events:', registeredEvents);
+  
+  const userWebinars = webinars.filter(webinar => registeredEvents.includes(webinar.id));
+  console.log('User webinars:', userWebinars);
 
   return (
     <div>

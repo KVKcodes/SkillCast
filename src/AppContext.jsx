@@ -3,20 +3,25 @@ import React, { createContext, useContext, useState } from 'react';
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+    
+    const getRegisteredEvents = () => {
+        return localStorage.getItem('registeredEvents') ? JSON.parse(localStorage.getItem('registeredEvents')) : [];
+    }
 
-    const registerForWebinar = (webinarId, userData) => {
-        setWebinars(webinars.map(w => {
-            if (w.id === webinarId) {
-            return { ...w, attendees: [...(w.attendees || []), userData] };
-            }
-            return w;
-        }));
-    };
+    const setRegisteredEvents = (events) => {
+        const items = localStorage.getItem('registeredEvents') ? JSON.parse(localStorage.getItem('registeredEvents')) : [];
+        if (items) {
+            items.push(events)
+        } else {
+            items = [events]
+        }
+        localStorage.setItem('registeredEvents', JSON.stringify(items))
+    }
 
     const [webinars, setWebinars] = useState([
         { id: '1', title: 'Introduction to React', date: '2024-05-15', time: '14:00', description: 'Learn the basics of React' },
         { id: '2', title: 'Advanced JavaScript Techniques', date: '2024-06-01', time: '15:30', description: 'Explore advanced JS concepts' },
-      ]);
+    ]);
 
   const [users, setUsers] = useState([
     { id: 1, name: 'KVK Siddartha', email: 'kvksiddartha@gmail.com', password: 'password123' },
@@ -66,7 +71,8 @@ export const AppProvider = ({ children }) => {
       currentUser,
       login,
       logout,
-      registerForWebinar,
+      getRegisteredEvents,
+      setRegisteredEvents,
     }}>
       {children}
     </AppContext.Provider>

@@ -1,52 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppContext } from '../AppContext';
 
 const RegistrationForm = () => {
-  const [formData, setFormData] = useState({ name: '', email: '' });
-  const { registerForWebinar, currentUser } = useAppContext();
+  const { currentUser, getRegisteredEvents, setRegisteredEvents } = useAppContext();
   const navigate = useNavigate();
   const { webinarId } = useParams();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const userData = currentUser ? { ...currentUser, ...formData } : formData;
-    registerForWebinar(webinarId, userData);
-    navigate('/my-webinars');
+    if (currentUser) {
+      const registeredEvents = getRegisteredEvents();
+      if (!registeredEvents.includes(webinarId)) {
+        const updatedEvents = [...registeredEvents, webinarId];
+        setRegisteredEvents(updatedEvents);
+        console.log('Registered for webinar:', webinarId);
+      }
+      navigate('/my-webinars');
+    } else {
+      navigate('/login');
+    }
   };
+
+  if (!currentUser) {
+    return <p>Please log in to register for this webinar.</p>;
+  }
 
   return (
     <form className="bg-white p-6 shadow-md rounded-md" onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold mb-4">Register for Webinar</h2>
-      <div className="mb-4">
-        <label htmlFor="name" className="block text-gray-700">Name</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          className="w-full border px-4 py-2 rounded-md"
-          onChange={handleChange}
-          required
-          defaultValue={currentUser ? currentUser.name : ''}
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-gray-700">Email</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          className="w-full border px-4 py-2 rounded-md"
-          onChange={handleChange}
-          required
-          defaultValue={currentUser ? currentUser.email : ''}
-        />
-      </div>
-      <button className="bg-blue-600 text-white px-4 py-2 rounded-md">Register</button>
+      <p>You will be registered with the following information:</p>
+      <p>Name: {currentUser.name}</p>
+      <p>Email: {currentUser.email}</p>
+      <button className="bg-blue-600 text-white px-4 py-2 rounded-md mt-4">Register</button>
     </form>
   );
 };
