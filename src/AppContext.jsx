@@ -9,7 +9,7 @@ export const AppProvider = ({ children }) => {
     }
 
     const setRegisteredEvents = (events) => {
-        const items = localStorage.getItem('registeredEvents') ? JSON.parse(localStorage.getItem('registeredEvents')) : [];
+        let items = localStorage.getItem('registeredEvents') ? JSON.parse(localStorage.getItem('registeredEvents')) : [];
         if (items) {
             items.push(events)
         } else {
